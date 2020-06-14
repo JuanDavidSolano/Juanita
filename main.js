@@ -1,9 +1,10 @@
-const Discord = require('discord.js');
 
+const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const PREFIX = "Juanita ";
+require('dotenv').config();
 
+const PREFIX = "Juanita ";
 
 let soliAvailable = true;
 
@@ -59,4 +60,4 @@ client.on('message', message => {
     }
 });
 
-client.login('NzIxNTY1NDQwOTM3Mjk1ODk0.XuWYpQ.KbBFwKajYvy38JzJ5xsAUpGFLi0');
+client.login(process.env.TOKEN);
