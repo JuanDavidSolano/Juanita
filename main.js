@@ -72,8 +72,6 @@ client.on('message', (message) => {
 								dispatcher.on('finish', (end) => {
 									channel.leave();
 								});
-
-								//channel.leave();
 							})
 							.catch((e) => {
 								// Oh no, it errored! Let's log it to console :)
@@ -82,7 +80,6 @@ client.on('message', (message) => {
 					} else {
 						message.reply('Soli no esta disponible');
 					}
-					//console.log(message.member.roles.cache.find(r => r.name === "Patron"));
 					break;
 				case 'Juanqui':
 					if (juanquiAvailable) {
@@ -98,7 +95,6 @@ client.on('message', (message) => {
 								dispatcher.on('finish', (end) => {
 									channel.leave();
 								});
-								//channel.leave();
 							})
 							.catch((e) => {
 								// Oh no, it errored! Let's log it to console :)
@@ -122,7 +118,6 @@ client.on('message', (message) => {
 								dispatcher.on('finish', (end) => {
 									channel.leave();
 								});
-								//channel.leave();
 							})
 							.catch((e) => {
 								// Oh no, it errored! Let's log it to console :)
