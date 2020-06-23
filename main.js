@@ -21,7 +21,6 @@ client.on('message', (message) => {
 	switch (args[0]) {
 		case 'ping':
 			message.reply('Pong!');
-			console.log(message.member.user.username);
 			break;
 		case 'mamamela':
 			channel = message.member.voice.channel;
@@ -30,7 +29,6 @@ client.on('message', (message) => {
 				.join()
 				.then((connection) => {
 					const dispatcher = connection.play('./audio/Esperancita.mp3');
-
 					dispatcher.on('finish', (end) => {
 						channel.leave();
 					});
@@ -89,7 +87,6 @@ client.on('message', (message) => {
 				case 'Juanqui':
 					if (juanquiAvailable) {
 						message.reply('Ya notifico a Juanqui');
-						console.log(client.channels);
 						const channel = client.channels.cache.get('614117620450590734');
 						if (!channel) return console.error('The channel does not exist!');
 						channel
@@ -108,7 +105,31 @@ client.on('message', (message) => {
 								console.error(e);
 							});
 					} else {
-						message.reply('Soli no esta disponible');
+						message.reply('Juanqui no esta disponible');
+					}
+					break;
+				case 'Saven':
+					if (juanquiAvailable) {
+						message.reply('Ya notifico a Juanqui');
+						const channel = client.channels.cache.get('614117620450590734');
+						if (!channel) return console.error('The channel does not exist!');
+						channel
+							.join()
+							.then((connection) => {
+								// Yay, it worked!
+								const dispatcher = connection.play('./audio/Juanqui.mp3');
+
+								dispatcher.on('finish', (end) => {
+									channel.leave();
+								});
+								//channel.leave();
+							})
+							.catch((e) => {
+								// Oh no, it errored! Let's log it to console :)
+								console.error(e);
+							});
+					} else {
+						message.reply('Juanqui no esta disponible');
 					}
 					break;
 				default:
