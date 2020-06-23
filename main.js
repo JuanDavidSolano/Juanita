@@ -9,6 +9,8 @@ const PREFIX = 'Juanita ';
 let soliAvailable = true;
 let juanquiAvailable = true;
 
+var channel;
+
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -22,22 +24,34 @@ client.on('message', (message) => {
 			console.log(message.member.user.username);
 			break;
 		case 'mamamela':
-			const channel = client.channels.cache.get('447957737528229917');
+			channel = message.member.voice.channel;
 			if (!channel) return console.error('The channel does not exist!');
 			channel
 				.join()
 				.then((connection) => {
-					// Yay, it worked!
 					const dispatcher = connection.play('./audio/Esperancita.mp3');
 
-					dispatcher.on('end', (end) => {
+					dispatcher.on('finish', (end) => {
 						channel.leave();
 					});
-
-					//channel.leave();
 				})
 				.catch((e) => {
-					// Oh no, it errored! Let's log it to console :)
+					console.error(e);
+				});
+			break;
+		case 'tintico':
+			channel = message.member.voice.channel;
+			if (!channel) return console.error('The channel does not exist!');
+			channel
+				.join()
+				.then((connection) => {
+					const dispatcher = connection.play('./audio/Tinticos.mp3');
+
+					dispatcher.on('finish', (end) => {
+						channel.leave();
+					});
+				})
+				.catch((e) => {
 					console.error(e);
 				});
 			break;
@@ -49,7 +63,7 @@ client.on('message', (message) => {
 				case 'Soli':
 					if (soliAvailable) {
 						message.reply('Ya notifico a Soli');
-						const channel = client.channels.cache.get('447957737528229917');
+						channel = client.channels.cache.get('447957737528229917');
 						if (!channel) return console.error('The channel does not exist!');
 						channel
 							.join()
@@ -57,7 +71,7 @@ client.on('message', (message) => {
 								// Yay, it worked!
 								const dispatcher = connection.play('./audio/Soli.mp3');
 
-								dispatcher.on('end', (end) => {
+								dispatcher.on('finish', (end) => {
 									channel.leave();
 								});
 
@@ -75,17 +89,18 @@ client.on('message', (message) => {
 				case 'Juanqui':
 					if (juanquiAvailable) {
 						message.reply('Ya notifico a Juanqui');
-						const channel = client.channels.cache.get('447957737528229917');
+						console.log(client.channels);
+						const channel = client.channels.cache.get('614117620450590734');
 						if (!channel) return console.error('The channel does not exist!');
 						channel
 							.join()
 							.then((connection) => {
 								// Yay, it worked!
 								const dispatcher = connection.play('./audio/Juanqui.mp3');
-								dispatcher.on('end', (end) => {
+
+								dispatcher.on('finish', (end) => {
 									channel.leave();
 								});
-
 								//channel.leave();
 							})
 							.catch((e) => {
