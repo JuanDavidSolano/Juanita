@@ -123,6 +123,10 @@ client.on('message', (message) => {
 						message.reply('Listo, Soli no dejare a nadie pasar');
 						soliAvailable = false;
 						break;
+					case 'Saven':
+						message.reply('Listo, Juanqui no dejare a nadie pasar');
+						juanquiAvailable = false;
+						break;
 				}
 			} else {
 				message.reply('No tienes permisos para hacer esto!');
@@ -130,8 +134,17 @@ client.on('message', (message) => {
 			break;
 		case 'desbloquea':
 			if (message.member.roles.cache.find((r) => r.name === 'Patron') != null) {
-				message.reply('Listo, Soli te notificare si alguien viene');
-				soliAvailable = true;
+				let username = message.member.user.username;
+				switch (username) {
+					case 'JuanDavidSolano':
+						message.reply('Listo, Soli te avisare');
+						soliAvailable = true;
+						break;
+					case 'Saven':
+						message.reply('Listo, Juanqui te avisare');
+						juanquiAvailable = true;
+						break;
+				}
 			} else {
 				message.reply('No tienes permisos para hacer esto!');
 			}
