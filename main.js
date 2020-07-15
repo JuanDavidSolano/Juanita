@@ -6,166 +6,133 @@ require('dotenv').config();
 
 const PREFIX = 'Juanita ';
 
-let soliAvailable = true;
-let juanquiAvailable = true;
-
 var channel;
+
+var patronesMap = new Map();
+
+patronesMap.set('soli', { available: true, channelId: '447957737528229917' });
+patronesMap.set('juanqui', { available: true, channelId: '614117620450590734' });
+//patronesMap.set('Yonnyce', { available: true, channelId: '' }); No tengo canal ctm
+
+
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on('message', (message) => {
+client.on('message', procesMessage);
+
+function procesMessage(message) {
 	let args = message.content.substring(PREFIX.length).split(' ');
+
+	//TODO antiSpam
+	//TODO ...
+	routeMessage(message, args);
+
+}
+
+function routeMessage(message, args) {
 
 	switch (args[0]) {
 		case 'ping':
-			message.reply('Pong!');
+			pingMessage(message);
 			break;
 		case 'mamamela':
-			channel = message.member.voice.channel;
-			if (!channel) return console.error('The channel does not exist!');
-			channel
-				.join()
-				.then((connection) => {
-					const dispatcher = connection.play('./audio/Esperancita.mp3');
-					dispatcher.on('finish', (end) => {
-						channel.leave();
-					});
-				})
-				.catch((e) => {
-					console.error(e);
-				});
+			mamamelaMessage(message);
 			break;
 		case 'tintico':
-			channel = message.member.voice.channel;
-			if (!channel) return console.error('The channel does not exist!');
-			channel
-				.join()
-				.then((connection) => {
-					const dispatcher = connection.play('./audio/Tinticos.mp3');
-
-					dispatcher.on('finish', (end) => {
-						channel.leave();
-					});
-				})
-				.catch((e) => {
-					console.error(e);
-				});
+			tinticoMessage(message);
 			break;
 		case 'ayuda':
-			message.reply('Puedes usar ```Juanita bajame``` para ver acceder a las oficinas disponibles');
+			ayudaMessage(message);
 			break;
 		case 'notifica':
-			switch (args[2]) {
-				case 'Soli':
-					if (soliAvailable) {
-						message.reply('Ya notifico a Soli');
-						channel = client.channels.cache.get('447957737528229917');
-						if (!channel) return console.error('The channel does not exist!');
-						channel
-							.join()
-							.then((connection) => {
-								// Yay, it worked!
-								const dispatcher = connection.play('./audio/Soli.mp3');
-
-								dispatcher.on('finish', (end) => {
-									channel.leave();
-								});
-							})
-							.catch((e) => {
-								// Oh no, it errored! Let's log it to console :)
-								console.error(e);
-							});
-					} else {
-						message.reply('Soli no esta disponible');
-					}
-					break;
-				case 'Juanqui':
-					if (juanquiAvailable) {
-						message.reply('Ya notifico a Juanqui');
-						const channel = client.channels.cache.get('614117620450590734');
-						if (!channel) return console.error('The channel does not exist!');
-						channel
-							.join()
-							.then((connection) => {
-								// Yay, it worked!
-								const dispatcher = connection.play('./audio/Juanqui.mp3');
-
-								dispatcher.on('finish', (end) => {
-									channel.leave();
-								});
-							})
-							.catch((e) => {
-								// Oh no, it errored! Let's log it to console :)
-								console.error(e);
-							});
-					} else {
-						message.reply('Juanqui no esta disponible');
-					}
-					break;
-				case 'Saven':
-					if (juanquiAvailable) {
-						message.reply('Ya notifico a Juanqui');
-						const channel = client.channels.cache.get('614117620450590734');
-						if (!channel) return console.error('The channel does not exist!');
-						channel
-							.join()
-							.then((connection) => {
-								// Yay, it worked!
-								const dispatcher = connection.play('./audio/Juanqui.mp3');
-
-								dispatcher.on('finish', (end) => {
-									channel.leave();
-								});
-							})
-							.catch((e) => {
-								// Oh no, it errored! Let's log it to console :)
-								console.error(e);
-							});
-					} else {
-						message.reply('Juanqui no esta disponible');
-					}
-					break;
-				default:
-					message.reply('No se a quien notificar');
-			}
+			notificaMessage(message, args[2])
 			break;
 		case 'bloquea':
-			if (message.member.roles.cache.find((r) => r.name === 'Patron') != null) {
-				let username = message.member.user.username;
-				switch (username) {
-					case 'JuanDavidSolano':
-						message.reply('Listo, Soli no dejare a nadie pasar');
-						soliAvailable = false;
-						break;
-					case 'Saven':
-						message.reply('Listo, Juanqui no dejare a nadie pasar');
-						juanquiAvailable = false;
-						break;
-				}
-			} else {
-				message.reply('No tienes permisos para hacer esto!');
-			}
+			bloqueaMessage(message)
 			break;
 		case 'desbloquea':
-			if (message.member.roles.cache.find((r) => r.name === 'Patron') != null) {
-				let username = message.member.user.username;
-				switch (username) {
-					case 'JuanDavidSolano':
-						message.reply('Listo, Soli te avisare');
-						soliAvailable = true;
-						break;
-					case 'Saven':
-						message.reply('Listo, Juanqui te avisare');
-						juanquiAvailable = true;
-						break;
-				}
-			} else {
-				message.reply('No tienes permisos para hacer esto!');
-			}
+			desbloqueaMessage(message)
 			break;
 	}
-});
+}
+
+function notificaMessage(message, notifyTo) {
+
+	let patron = patronesMap.get(notifyTo.toLowerCase())
+
+	if (!patron || !patron.available) {
+		message.reply(`${notifyTo} no esta disponible (O no existe)`);
+		return;
+	}
+
+	message.reply(`Ya notifico a ${notifyTo}`);
+	joinAndPlaySound(patron.channelId, `./audio/${notifyTo}.mp3`);
+
+}
+
+function bloqueaMessage(message) {
+
+	if (message.member.roles.cache.find((r) => r.name === 'Patron') == null) {
+		message.reply('No tienes permisos para hacer esto!');
+		return;
+	}
+
+	let patron = patronesMap.get(message.member.user.username);
+	patron.available = false;
+	message.reply(`Listo, ${message.member.user.username} no dejare a nadie pasar`);
+}
+
+function desbloqueaMessage(message) {
+
+	if (message.member.roles.cache.find((r) => r.name === 'Patron') == null) {
+		message.reply('No tienes permisos para hacer esto!');
+		return;
+	}
+
+	let patron = patronesMap.get(message.member.user.username);
+	patron.available = true;
+	message.reply(`Listo, ${message.member.user.username} te avisare`);
+}
+
+function pingMessage(message) {
+	message.reply('Pong!');
+}
+
+function mamamelaMessage(message) {
+	//TODO verificar nombre de proiedad id
+	joinAndPlaySound(message.member.voice.channel.id, './audio/Esperancita.mp3');
+}
+
+function tinticoMessage(message) {
+	//TODO verificar nombre de propiedad id
+	joinAndPlaySound(message.member.voice.channel.id, './audio/Tinticos.mp3');
+}
+
+function ayudaMessage(message) {
+	message.reply('Puedes usar ```Juanita bajame``` para ver acceder a las oficinas disponibles');
+}
+
+function joinAndPlaySound(channelId, audioRoute) {
+
+	channel = client.channels.cache.get(channelId);
+	if (!channel) return console.error('The channel does not exist!');
+	channel
+		.join()
+		.then((connection) => {
+			// Yay, it worked!
+			const dispatcher = connection.play(audioRoute);
+
+			dispatcher.on('finish', (end) => {
+				channel.leave();
+			});
+		})
+		.catch((e) => {
+			// Oh no, it errored! Let's log it to console :)
+			console.error(e);
+		});
+
+}
 
 client.login(process.env.TOKEN);
