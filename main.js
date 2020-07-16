@@ -30,7 +30,9 @@ client.on('message', procesMessage);
 
 function procesMessage(message) {
 
-	if (!message.content.startsWith(PREFIX)) return;
+	if (!message.content.startsWith(PREFIX)){
+		return;
+	}
 
 	let args = message.content.substring(PREFIX.length).split(' ');
 
@@ -78,9 +80,10 @@ function isSpam(message) {
 	timeElapsedInSeconds = (currentTime - sender.lastSendedMessageTime) / 1000;
 
 	if (timeElapsedInSeconds < SPAM_DELAY) {
-		message.reply(`${message.member.user.username}, espera ${SPAM_DELAY - timeElapsedInSeconds} segundos para notificar nuevamente`);
+		message.reply(`Espera ${Math.round(SPAM_DELAY - timeElapsedInSeconds)} segundos para notificar nuevamente`);
 	} else {
-		false;
+		antiSpamMap.set(message.member.user.username, { lastSendedMessageTime: new Date().getTime() });
+		return false;
 	}
 
 	return true;
