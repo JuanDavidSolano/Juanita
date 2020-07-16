@@ -1,18 +1,24 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 require('ffmpeg');
-
 require('dotenv').config();
 
-const PREFIX = 'Juanita ';
-
+//####### CONSTANTS ########
 var channel;
-
 var patronesMap = new Map();
+var antiSpamMap = new Map();
+var SPAM_DELAY;
+//##########################
+
+//####### INITIALITATION #######
+const PREFIX = 'Juanita ';
 
 patronesMap.set('soli', { available: true, channelId: '447957737528229917' });
 patronesMap.set('juanqui', { available: true, channelId: '614117620450590734' });
 //patronesMap.set('Yonnyce', { available: true, channelId: '' }); No tengo canal ctm
+
+SPAM_DELAY = 5;
+//##############################
 
 
 
@@ -23,12 +29,16 @@ client.on('ready', () => {
 client.on('message', procesMessage);
 
 function procesMessage(message) {
+
+	if (!message.content.startsWith(PREFIX)){
+		return;
+	}
+
 	let args = message.content.substring(PREFIX.length).split(' ');
 
-	//TODO antiSpam
-	//TODO ...
-	routeMessage(message, args);
+	if (isSpam(message)) return;
 
+	routeMessage(message, args);
 }
 
 function routeMessage(message, args) {
@@ -56,6 +66,27 @@ function routeMessage(message, args) {
 			desbloqueaMessage(message)
 			break;
 	}
+}
+
+function isSpam(message) {
+	let sender = antiSpamMap.get(message.member.user.username);
+
+	if (!sender) {
+		antiSpamMap.set(message.member.user.username, { lastSendedMessageTime: new Date().getTime() });
+		return false;
+	}
+
+	let currentTime = new Date().getTime();
+	timeElapsedInSeconds = (currentTime - sender.lastSendedMessageTime) / 1000;
+
+	if (timeElapsedInSeconds < SPAM_DELAY) {
+		message.reply(`Espera ${Math.round(SPAM_DELAY - timeElapsedInSeconds)} segundos para notificar nuevamente`);
+	} else {
+		antiSpamMap.set(message.member.user.username, { lastSendedMessageTime: new Date().getTime() });
+		return false;
+	}
+
+	return true;
 }
 
 function notificaMessage(message, notifyTo) {
