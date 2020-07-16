@@ -20,8 +20,6 @@ patronesMap.set('juanqui', { available: true, channelId: '614117620450590734' })
 SPAM_DELAY = 5;
 //##############################
 
-
-
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -29,8 +27,7 @@ client.on('ready', () => {
 client.on('message', procesMessage);
 
 function procesMessage(message) {
-
-	if (!message.content.startsWith(PREFIX)){
+	if (!message.content.startsWith(PREFIX)) {
 		return;
 	}
 
@@ -42,7 +39,6 @@ function procesMessage(message) {
 }
 
 function routeMessage(message, args) {
-
 	switch (args[0]) {
 		case 'ping':
 			pingMessage(message);
@@ -57,13 +53,13 @@ function routeMessage(message, args) {
 			ayudaMessage(message);
 			break;
 		case 'notifica':
-			notificaMessage(message, args[2])
+			notificaMessage(message, args[2]);
 			break;
 		case 'bloquea':
-			bloqueaMessage(message)
+			bloqueaMessage(message);
 			break;
 		case 'desbloquea':
-			desbloqueaMessage(message)
+			desbloqueaMessage(message);
 			break;
 	}
 }
@@ -90,8 +86,7 @@ function isSpam(message) {
 }
 
 function notificaMessage(message, notifyTo) {
-
-	let patron = patronesMap.get(notifyTo.toLowerCase())
+	let patron = patronesMap.get(notifyTo.toLowerCase());
 
 	if (!patron || !patron.available) {
 		message.reply(`${notifyTo} no esta disponible (O no existe)`);
@@ -99,12 +94,10 @@ function notificaMessage(message, notifyTo) {
 	}
 
 	message.reply(`Ya notifico a ${notifyTo}`);
-	joinAndPlaySound(patron.channelId, `./audio/${notifyTo}.mp3`);
-
+	joinAndPlaySound(patron.channelId, `./audio/${notifyTo.toLowerCase()}.mp3`);
 }
 
 function bloqueaMessage(message) {
-
 	if (message.member.roles.cache.find((r) => r.name === 'Patron') == null) {
 		message.reply('No tienes permisos para hacer esto!');
 		return;
@@ -116,7 +109,6 @@ function bloqueaMessage(message) {
 }
 
 function desbloqueaMessage(message) {
-
 	if (message.member.roles.cache.find((r) => r.name === 'Patron') == null) {
 		message.reply('No tienes permisos para hacer esto!');
 		return;
@@ -146,7 +138,6 @@ function ayudaMessage(message) {
 }
 
 function joinAndPlaySound(channelId, audioRoute) {
-
 	channel = client.channels.cache.get(channelId);
 	if (!channel) return console.error('The channel does not exist!');
 	channel
@@ -163,7 +154,6 @@ function joinAndPlaySound(channelId, audioRoute) {
 			// Oh no, it errored! Let's log it to console :)
 			console.error(e);
 		});
-
 }
 
 client.login(process.env.TOKEN);
