@@ -5,7 +5,8 @@
 	"main": "main.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node main.js"
+		"start": "node main.js",
+		"dev": "nodemon"
 	},
 	"author": "JuanSolanoS",
 	"license": "ISC",
@@ -15,5 +16,8 @@
 		"ffmpeg": "0.0.4",
 		"ffmpeg-static": "^4.2.4",
 		"node-opus": "^0.3.3"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.4"
 	}
 }
