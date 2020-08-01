@@ -124,17 +124,25 @@ function pingMessage(message) {
 }
 
 function mamamelaMessage(message) {
-	//TODO verificar nombre de proiedad id
 	joinAndPlaySound(message.member.voice.channel.id, './audio/Esperancita.mp3');
 }
 
 function tinticoMessage(message) {
-	//TODO verificar nombre de propiedad id
 	joinAndPlaySound(message.member.voice.channel.id, './audio/Tinticos.mp3');
 }
 
 function ayudaMessage(message) {
-	message.reply('Puedes usar ```Juanita bajame``` para ver acceder a las oficinas disponibles');
+	//message.reply('Puedes usar ```Juanita bajame``` para ver acceder a las oficinas disponibles');
+	message.reply(`
+	Ayuda y comandos
+	Modo de uso: **Juanita** [comando]
+	\tcomandos:
+	\t**notifica a** [alias del patron] - _El bot entrara en la sala del patron y le dira que lo esperas en recepcion_
+	\t**mamamela** - _El bot te pegara la mamada de tu vida mientras dice su frase alegorica_
+	\t**tintico** - _El bot te traera un delicioso tintico_
+	\t**bloquea** - _El bot evitara que te lleguen notificaciones a la sala (Solo si eres patron)_
+	\t**desbloquea** - _El bot permitira que te lleguen notificaciones a la sala (Solo si eres patron)_
+	`);
 }
 
 function joinAndPlaySound(channelId, audioRoute) {
@@ -143,15 +151,12 @@ function joinAndPlaySound(channelId, audioRoute) {
 	channel
 		.join()
 		.then((connection) => {
-			// Yay, it worked!
 			const dispatcher = connection.play(audioRoute);
-
 			dispatcher.on('finish', (end) => {
 				channel.leave();
 			});
 		})
 		.catch((e) => {
-			// Oh no, it errored! Let's log it to console :)
 			console.error(e);
 		});
 }
