@@ -155,8 +155,8 @@ function ayudaMessage(message) {
 	\t**tintico** - _Juanita te traera un delicioso tintico_
 	\t**bloquea** - _Juanita evitara que te lleguen notificaciones a la sala (Solo si eres patron)_
 	\t**desbloquea** - _Juanita permitira que te lleguen notificaciones a la sala (Solo si eres patron)_
-	\t**registra** [nombre del patron] - _Juanita registrara a el nuevo patron y le asignara como oficina la sala en la que estes_
-	\t**elimina** [nombre del patron] - _Juanita eliminara a el patron de su lista de patrones_
+	\t**registra a** [nombre del patron] - _Juanita registrara a el nuevo patron y le asignara como oficina la sala en la que estes_
+	\t**elimina a** [nombre del patron] - _Juanita eliminara a el patron de su lista de patrones_
 	\t**lista** - _Juanita mostrara la lista de patrones_
 	\t**atiende** [nombre de la sala] - _Juanita estara atenta a la sala especificada y te notificara si alguien entra en ella_
 	\t**desatiende** [nombre de la sala] - _Juanita dejara de estar atenta a los ingresos de la sala especificada_
