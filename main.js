@@ -137,11 +137,16 @@ function ayudaMessage(message) {
 	Ayuda y comandos
 	Modo de uso: **Juanita** [comando]
 	\tcomandos:
-	\t**notifica a** [alias del patron] - _El bot entrara en la sala del patron y le dira que lo esperas en recepcion_
-	\t**mamamela** - _El bot te pegara la mamada de tu vida mientras dice su frase alegorica_
-	\t**tintico** - _El bot te traera un delicioso tintico_
-	\t**bloquea** - _El bot evitara que te lleguen notificaciones a la sala (Solo si eres patron)_
-	\t**desbloquea** - _El bot permitira que te lleguen notificaciones a la sala (Solo si eres patron)_
+	\t**notifica a** [alias del patron] - _Juanita entrara en la sala del patron y le dira que lo esperas en recepcion_
+	\t**mamamela** - _Juanita te pegara la mamada de tu vida mientras dice su frase alegorica_
+	\t**tintico** - _Juanita te traera un delicioso tintico_
+	\t**bloquea** - _Juanita evitara que te lleguen notificaciones a la sala (Solo si eres patron)_
+	\t**desbloquea** - _Juanita permitira que te lleguen notificaciones a la sala (Solo si eres patron)_
+	\t**registra** [nombre del patron] - _Juanita registrara a el nuevo patron y le asignara como oficina la sala en la que estes_
+	\t**elimina** [nombre del patron] - _Juanita eliminara a el patron de su lista de patrones_
+	\t**lista** - _Juanita mostrara la lista de patrones_
+	\t**atiende** [nombre de la sala] - _Juanita estara atenta a la sala especificada y te notificara si alguien entra en ella_
+	\t**desatiende** [nombre de la sala] - _Juanita dejara de estar atenta a los ingresos de la sala especificada_
 	`);
 }
 
