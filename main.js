@@ -13,8 +13,8 @@ var SPAM_DELAY;
 //####### INITIALITATION #######
 const PREFIX = 'Juanita ';
 
-patronesMap.set('soli', { available: true, channelId: '447957737528229917' });
-patronesMap.set('juanqui', { available: true, channelId: '614117620450590734' });
+patronesMap.set('juandavidsolano', { available: true, channelId: '447957737528229917', alias: 'Soli' }, 'Soli');
+patronesMap.set('saven', { available: true, channelId: '614117620450590734', alias: 'Juanqui' });
 //patronesMap.set('Yonnyce', { available: true, channelId: '' }); No tengo canal ctm
 
 SPAM_DELAY = 5;
@@ -87,7 +87,7 @@ function isSpam(message) {
 
 function notificaMessage(message, notifyTo) {
 	let patron = patronesMap.get(notifyTo.toLowerCase());
-
+	console.log(patronesMap.get({ alias: notifyTo }));
 	if (!patron || !patron.available) {
 		message.reply(`${notifyTo} no esta disponible (O no existe)`);
 		return;
@@ -102,10 +102,16 @@ function bloqueaMessage(message) {
 		message.reply('No tienes permisos para hacer esto!');
 		return;
 	}
-
+	console.log(message.member.user.username);
 	let patron = patronesMap.get(message.member.user.username);
 	patron.available = false;
-	message.reply(`Listo, ${message.member.user.username} no dejare a nadie pasar`);
+	message.reply(
+		`Listo, ${
+			patronesMap.get(message.member.user.username).alias
+				? patronesMap.get(message.member.user.username).alias
+				: message.member.user.username
+		} no dejare a nadie pasar`
+	);
 }
 
 function desbloqueaMessage(message) {
@@ -116,7 +122,13 @@ function desbloqueaMessage(message) {
 
 	let patron = patronesMap.get(message.member.user.username);
 	patron.available = true;
-	message.reply(`Listo, ${message.member.user.username} te avisare`);
+	message.reply(
+		`Listo, ${
+			patronesMap.get(message.member.user.username).alias
+				? patronesMap.get(message.member.user.username).alias
+				: message.member.user.username
+		} te avisare`
+	);
 }
 
 function pingMessage(message) {
