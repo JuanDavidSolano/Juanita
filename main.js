@@ -1,3 +1,7 @@
+//https://ttsmp3.com/
+//https://discordjs.guide/?#before-you-begin
+//https://github.com/Marak/say.js
+
 const Discord = require('discord.js');
 const client = new Discord.Client();
 require('ffmpeg');
@@ -61,6 +65,15 @@ function routeMessage(message, args) {
 		case 'desbloquea':
 			desbloqueaMessage(message);
 			break;
+		case 'registra':
+			registraMessage(message, args[2]);
+			break;
+
+		case 'elimina':
+			eliminaMessage(message, args[2]);
+			break;
+
+
 	}
 }
 
@@ -154,12 +167,49 @@ function ayudaMessage(message) {
 	\t**tintico** - _Juanita te traera un delicioso tintico_
 	\t**bloquea** - _Juanita evitara que te lleguen notificaciones a la sala (Solo si eres patron)_
 	\t**desbloquea** - _Juanita permitira que te lleguen notificaciones a la sala (Solo si eres patron)_
-	\t**registra** [nombre del patron] - _Juanita registrara a el nuevo patron y le asignara como oficina la sala en la que estes_
-	\t**elimina** [nombre del patron] - _Juanita eliminara a el patron de su lista de patrones_
+	\t**registra a** [nombre del patron] - _Juanita registrara a el nuevo patron y le asignara como oficina la sala en la que estes_
+	\t**elimina a** [nombre del patron] - _Juanita eliminara a el patron de su lista de patrones_
 	\t**lista** - _Juanita mostrara la lista de patrones_
 	\t**atiende** [nombre de la sala] - _Juanita estara atenta a la sala especificada y te notificara si alguien entra en ella_
 	\t**desatiende** [nombre de la sala] - _Juanita dejara de estar atenta a los ingresos de la sala especificada_
 	`);
+}
+
+function registraMessage(message, ascenderA) {
+
+
+	if (!message.member.hasPermission("ADMINISTRATOR")) {
+		message.reply(`Lo siento, debes ser administrador del servidor para realizar esta accion`);
+		return;
+	}
+
+	let patronExistente = patronesMap.get(ascenderA);
+
+	if (patronExistente) {
+		message.reply(`El usuario ${ascenderA} ya es patron de otro canal, ten en cuenta que sera reemplazado por este.`);
+	}
+
+	patronesMap.set(ascenderA, { available: true, channelId: message.member.voice.channel.id });
+	message.reply(`Usuario ${ascenderA} agregado a lista de patrones.`);
+}
+
+function eliminaMessage(message, removerA) {
+
+	if (!message.member.hasPermission("ADMINISTRATOR")) {
+		message.reply(`Lo siento, debes ser administrador del servidor para realizar esta accion`);
+		return;
+	}
+
+	let patronExistente = patronesMap.get(removerA);
+
+	if (!patronExistente) {
+		message.reply(`El usuario ${removerA} no existe en la lista de patrones.`);
+		return;
+	}
+
+	patronesMap.delete(removerA);
+
+	message.reply(`Usuario ${removerA} removido de lista de patrones.`);
 }
 
 function joinAndPlaySound(channelId, audioRoute) {
